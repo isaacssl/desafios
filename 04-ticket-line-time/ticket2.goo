@@ -1,0 +1,91 @@
+package main
+
+import "fmt"
+
+type Person struct {
+	tickets  int
+	isTarget bool
+	Next     *Person
+	Prev     *Person
+}
+
+type circularline struct {
+	Head *Person
+	Tail *Person
+	Len  int
+}
+
+func (l *circularline) inLine(ntickets int, isTarg bool) {
+	curr := &Person{tickets: ntickets, isTarget: isTarg}
+	if l.Head == nil {
+		l.Head = curr
+		l.Tail = curr
+		l.Head.Prev = l.Tail
+		l.Tail.Next = l.Head
+		l.Len++
+		return
+	}
+	curr = &Person{Next: l.Head, Prev: l.Tail}
+	l.Len++
+	l.Tail.Next = curr
+	l.Tail = curr
+	l.Head.Prev = l.Tail
+}
+
+func (l *circularline) outLine() {
+	l.Tail.Next = l.Head.Next
+	l.Head.Next.Prev = l.Tail
+	l.Len--
+}
+
+func (l *circularline) buyATicket() bool {
+	l.Head.tickets--
+	if l.Head.tickets == 0 {
+		return true
+	}
+	return false
+}
+
+func (l *circularline) goBack() {
+	l.Tail = l.Head
+	l.Head = l.Head.Next
+}
+
+func timeRequiredToBuy(tickets []int, k int) int {
+	var Line circularline
+
+	time := 0
+	for i, v := range tickets {
+		curr := v - 1
+		switch {
+		case curr != 0 && i == k:
+			Line.inLine(v, true)
+		case curr != 0 && i != k:
+			Line.inLine(v, false)
+		case curr == 0 && i == k:
+			return i
+		}
+		time++
+	}
+	for {
+		curr := Line.buyATicket()
+		if curr {
+			if Line.Head.isTarget {
+				break
+			}
+			Line.outLine()
+		}
+		Line.goBack()
+	}
+	return time
+}
+
+func main() {
+	tickets := []int{2, 3, 2}
+	k := 2
+
+	time := timeRequiredToBuy(tickets, k)
+
+	fmt.Println(time)
+
+}
