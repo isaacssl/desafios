@@ -1,27 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func minIncrementForUnique(nums []int) int {
-	hasChange := true
+	numsMap := make(map[int]bool)
 	move := 0
 
-	for hasChange {
-		hasChange = false
-		for i := 0; i < len(nums)-1; i++ {
-			if nums[i] > nums[i+1] {
-				hasChange = true
-				tmp := nums[i]
-				nums[i] = nums[i+1]
-				nums[i+1] = tmp
-			}
-			if nums[i] == nums[i+1] {
-				hasChange = true
-				nums[i+1]++
-				move++
-				break
-			}
+	for _, v := range nums {
+		for numsMap[v] {
+			v++
+			move++
 		}
+		numsMap[v] = true
 	}
 	return move
 }
