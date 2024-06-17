@@ -6,13 +6,10 @@ import (
 )
 
 func judgeSquareSum(c int) bool {
-	cfloat := float64(c)
-	var a float64
-	max := cfloat * math.Sqrt(2)
-
-	for a = 0; a <= max; a++ {
-		b := math.Sqrt(cfloat - (a * a))
-		if math.Mod(b, 1) == 0 {
+	for a := 0; a*a <= c; a++ {
+		bSquared := c - a*a
+		b := int(math.Sqrt(float64(bSquared)))
+		if b*b == bSquared {
 			return true
 		}
 	}
