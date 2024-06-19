@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-func maxProfitAssignment(difficulty []int, profit []int, worker []int) int {
+func maxProfitAssignment2(difficulty []int, profit []int, worker []int) int {
 	relation := make(map[int]int)
 
 	for i, v := range difficulty {
@@ -25,10 +25,39 @@ func maxProfitAssignment(difficulty []int, profit []int, worker []int) int {
 			if relation[d] > bestBudge {
 				bestBudge = relation[d]
 			}
-
 		}
 		total += bestBudge
+	}
+	return total
+}
 
+func maxProfitAssignment(difficulty []int, profit []int, worker []int) int {
+
+	relation := make(map[int]int)
+
+	for i, v := range difficulty {
+		if relation[v] < profit[i] {
+			relation[v] = profit[i]
+		}
+	}
+	sort.Ints(difficulty)
+	sort.Ints(worker)
+	total := 0
+
+	latest := 0
+	betterProfit := 0
+
+	for _, w := range worker {
+		for i := latest; i < len(difficulty); i++ {
+			if difficulty[i] > w {
+				break
+			}
+			latest = i
+			if betterProfit < relation[difficulty[i]] {
+				betterProfit = relation[difficulty[i]]
+			}
+		}
+		total += betterProfit
 	}
 	return total
 }
