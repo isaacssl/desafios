@@ -1,3 +1,4 @@
+```go
 package main
 
 import "fmt"
@@ -140,3 +141,4 @@ func main() {
 	printALL(head1, head2, head)
 
 }
+```
